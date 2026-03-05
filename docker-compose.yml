@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  bot:
+    build: .
+    container_name: antibug-bot
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - MONGODB_URI=mongodb://mongodb:27017/antibug
+      - OWNER_NUMBER=${OWNER_NUMBER:-263776509966}
+      - BOT_NAME=ANTIBUG
+      - PREFIX=.
+    volumes:
+      - ./sessions:/app/sessions
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./temp:/app/temp
+    depends_on:
+      - mongodb
+    networks:
+      - antibug-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  mongodb:
+    image: mongo:7
+    container_name: antibug-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=antibug
+    volumes:
+      - mongodb-data:/data/db
+      - mongodb-config:/data/configdb
+    networks:
+      - antibug-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mongodb-data:
+  mongodb-config:
+
+networks:
+  antibug-network:
+    driver: bridge
