@@ -13,7 +13,7 @@ const config = {
     NODE_ENV: process.env.NODE_ENV || 'production',
 
     // MongoDB Configuration
-    MONGODB_URI: process.env.MONGODB_URI || process.env.MONGO_URL || 'mongodb://localhost:27017/antibug',
+    MONGODB_URI: process.env.MONGODB_URI || process.env.MONGO_URL || 'mongodb+srv://ntandomods:vHdmLZJTw5lHXmXz@modsxxx.n82ej6m.mongodb.net/?appName=Modsxxx',
 
     // Bot Configuration
     BOT_NAME: process.env.BOT_NAME || 'ANTIBUG',
