@@ -1,0 +1,49 @@
+services:
+  # Web Service
+  - type: web
+    name: antibug-whatsapp-bot
+    runtime: node
+    buildCommand: npm install
+    startCommand: node server.js
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: HOST
+        value: 0.0.0.0
+      - key: MONGODB_URI
+        sync: false
+      - key: OWNER_NUMBER
+        sync: false
+      - key: BOT_NAME
+        value: ANTIBUG
+      - key: PREFIX
+        value: .
+      - key: AUTO_RECORDING
+        value: true
+      - key: AUTO_VIEW_STATUS
+        value: true
+      - key: AUTO_LIKE_STATUS
+        value: true
+      - key: TRUST_PROXY
+        value: true
+      - key: CORS_ORIGIN
+        value: "*"
+
+  # Background Worker (optional - for heavy processing)
+  - type: worker
+    name: antibug-worker
+    runtime: node
+    buildCommand: npm install
+    startCommand: node server.js
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false
+      - key: OWNER_NUMBER
+        sync: false
